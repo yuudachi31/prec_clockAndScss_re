@@ -1,0 +1,17 @@
+{
+    "application":[
+        {
+            "subtitle":"html",
+            "appList":["template"]
+        },
+        {
+            "subtitle":"scss/css",
+            "appList":["variable $name","@import","@mixin+@include",
+                "站位選擇器%(不會被編譯出來)+@extend","@for","@if...@else","nest rules","引用父選擇器 &"]
+        },
+        {
+            "subtitle":"js",
+            "appList":["Date()","IIFE","json data"]
+        }
+    ]
+}

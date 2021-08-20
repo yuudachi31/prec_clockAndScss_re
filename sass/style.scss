@@ -1,0 +1,438 @@
+// scss技巧:變量,import,mixin,extend,for,if...else,mixin+include,import
+// sass --watch sass/style.scss:css/style.css
+
+//變量
+$scale-color:rgb(255, 255, 255);
+$big-scale-color:rgb(255, 244, 86);
+$subtitle-color:rgb(255, 255, 255);
+$clock-plate-color:linear-gradient(rgb(61, 56, 77) 30%, rgb(128, 159, 226) 120%);
+@import 'test';
+// 在此處import test.scss的內容
+*{
+    margin:0;
+    padding:0;
+}
+a{
+    background-color: rgba(255, 255, 255, 0.582);
+    padding: 5px;
+}
+
+body{
+    
+}
+
+.container{
+    margin: 0 auto;
+
+    width: 800px;
+    background-color: rgba(210, 238, 238, 0.808);
+    text-align: center;
+
+    // 1.嵌套 Nested Rules 
+    header{
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+      
+    }
+}
+//混合mixin 可以設定參數
+@mixin font-main($fz,$color:$subtitle-color){
+    font: {
+      family: Arial;
+      font-size: $fz;
+      weight: 100;
+    }
+    color: $color;
+  
+}
+
+.subtitle{
+    margin-top: 50px;
+
+
+    background-color: rgb(51, 92, 109);
+    padding: 10px 18px;
+    /** 引用 mixin **/
+    @include font-main(30px);
+    //引用父選擇器 &
+    &:hover{
+        background-color: rgba(33, 67, 82, 0.404);
+    }
+}
+.section1{
+  display: flex;
+ align-items: center;
+  flex-direction: column;
+}
+.applications_cont{
+  width:480px;
+  background-color: rgb(255, 255, 255);
+  margin-top: 30px;
+  text-align: start;
+  padding: 25px;
+  
+  h1{
+  color: rgb(22, 40, 73);
+
+}
+.app-subtitle{
+  margin-left: 30px;
+  margin-top: 10px;
+  font-size: 25px;
+  font-weight: bold;
+  display: inline;
+  position: relative;
+  z-index: 2;
+  &::after{
+    content: ":";
+  }
+  .app-title-box-bg{
+    background-color: rgba(255, 72, 148, 0.493);
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    left: 0px;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+.app-each-list{
+  margin-left: 40px;
+
+}
+.app-each{
+  display: inline;
+position: relative;
+z-index: 2;
+  .app-box-bg{
+     background-color: rgb(89, 214, 252);
+    // position: absolute;
+    width: 10px;
+    height:10px;
+    left: 5px;
+    top: 5px;
+    z-index: -1;
+    display: inline-block;
+    margin-right: 3px;
+  }
+}
+
+
+} 
+
+.clock_cont {
+    background-color: #fad86a65;
+    width: 400px;
+    height: 400px;
+    margin: 50px auto;
+    border-radius: 20px;
+  margin-bottom: 300px;
+  padding: 15px;
+  }
+  
+  .clock_border{
+    position: relative;
+    border:solid rgb(212, 212, 212) 10px ;
+    margin: auto;
+    width: 95%;
+    height: 95%;
+    border-radius: 100%;
+    background: $clock-plate-color;
+    
+  }
+
+// 使用站位選擇器 % ，定義一個樣式，被定義的類，它將不會被編譯出來。
+// 若沒有標註 % 的類，也可以使用 @extend 引入，但定義的類會被編譯出來。
+%num-style{
+  color: #fff;
+  font-size: 30px;
+}
+
+  %scale-style {
+ position: absolute;
+ width: 100px;
+ height: 100px;
+ 
+}
+  .clock-scale{
+    @extend %scale-style; 
+    background-color: rgb(211, 117, 117);
+  }
+
+  .all-clock-scale{
+position: relative;
+width: 100%;
+height: 100%;
+// background-color: rgba(255, 255, 255, 0.527);
+}
+.scales{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  left: 0;
+  top: 0;
+}
+// SassScript 支持對數字的運算，如：（加法 +、減法 +、乘法 *、除法 /、取模 % 等 ..）
+/**
+div a {
+    $width: 500px;
+    width: $width/2;             // 使用變量，和 / 
+    font: 16px/10px;             // 原生CSS，不作為除法
+    height: (250px/2);           // 使用了(), 和 /
+    margin-left: 10px + 8px/2px; // 使用了 +, 和 /
+}
+**/
+//for迴圈和if..else的應用
+@for $i from 1 through 36 {
+    @if ($i%3==0) {
+      //如果在小時線和星星上就不顯示刻度
+      .ex-clock-scale:nth-child(#{$i}) {
+        transform: rotate(#{$i * 5}deg);
+        &::before {
+          width: 0;
+          height: 0;
+        }
+        &::after {
+          width: 0;
+          height: 0;
+        }
+      }
+    } @else {
+      .ex-clock-scale:nth-child(#{$i}) {
+        transform: rotate(#{$i * 5}deg); //分鐘刻度5度
+      }
+    }
+  }
+
+  .clock-scale-1{
+      height: 80%;
+      width: 2px;
+       background-color: #fff;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      &::before {
+        content: "";
+      position: absolute;
+      height: 10px;
+      width: 10px;
+      background-color: rgb(252, 0, 0);
+      transform: translateX(-50%);
+      top:0;
+    }
+      &::after {
+        content: "";
+        position: absolute;
+        height: 10px;
+        width: 10px;
+        background-color: rgb(233, 1, 1);
+        bottom: 0;
+        transform: translateX(-50%);
+      }
+     
+  }
+
+  @for $i from 1 through 36 {
+    @if($i<=30){
+    @if ($i%5==0) {
+    
+      //如果在小時線和星星上就不顯示刻度
+       .clock-scale-child:nth-child(#{$i}) {
+        height: 70%;
+        width: 2px;
+        //  background-color: #fff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        transform: rotateZ(#{$i*6}deg);
+        &::before {
+          // content: "#{$i/5}";
+          content: "";
+          height: 20px;
+          width: 1.5px;
+        position: absolute;
+         background-color:  #fff;
+         
+          // @extend %num-style;
+        //  transform: translateX(-50%)  rotateZ(#{-$i*5.99}deg);
+        top:0;
+      }
+      
+        &::after {
+          // content: "#{$i/5+6}";
+          content: "";
+          height: 20px;
+          width: 1.5px;
+          position: absolute;
+          // @extend %num-style;
+           background-color: #fff;
+          bottom: 0;
+          // transform: translateX(-50%) rotateZ(#{-$i*5.99}deg);
+        }
+      }
+    } @else {
+      .clock-scale-child:nth-child(#{$i}) {
+      height: 70%;
+      width: 2px;
+      //  background-color: #fff;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      transform: rotateZ(#{$i*6}deg);
+       &::before {
+        // content: "#{$i}";
+        content: "";
+      position: absolute;
+      height: 15px;
+      width: 0.5px;
+      background-color: #fff;
+      top:0;
+      // transform: translateX(-50%) ;
+    }
+      &::after {
+        content: "";
+        position: absolute;
+        height: 15px;
+        width: 0.5px;
+        background-color:  #fff;
+        bottom: 0;
+        // transform: translateX(-50%);
+      }
+      }
+    }
+  }@else{
+     .clock-num:nth-child(#{$i}) {
+      height: 90%;
+     
+       
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      transform: rotateZ(#{($i - 30)*30}deg);
+      &::before {
+         content: "#{$i - 30}";
+    //    content: "";
+      
+     
+      position: absolute;
+      //  background-color:  #fff;
+       
+         @extend %num-style;
+        transform: translateX(-50%) rotateZ(#{-($i - 30)*30}deg) ;
+      top:0;
+    }
+      &::after {
+         content: "#{$i - 24}";
+        // content: "";
+    
+       
+        position: absolute;
+        @extend %num-style;
+        //  background-color: #fff;
+        bottom: 0;
+        transform: translateX(-50%) rotateZ(#{-($i - 30)*30}deg) ;
+      }
+    }
+  }
+  }
+
+  // .mid{
+  //   height: 80%;
+  //   width: 2px;
+  //    background-color: #fff;
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  //   margin: auto;
+  // }
+.clock-hands{
+  position: absolute;
+width: 6px;
+height: 6px;
+left: 0;
+right: 0;
+top: 0;
+bottom: 0;
+margin: auto;
+background-color: #fff;
+.hand-second{
+  width: 2px;
+  height: 100px;
+  background-color: rgb(253, 253, 221);
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+right: 0;
+margin:0 auto;
+transform-origin: bottom center;
+transform: rotate(0deg) translateX(-50%);
+
+
+}
+.hand-minute{
+  width: 8px;
+  height:90px;
+  background-color: rgba(241, 197, 247, 0.74);
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+right: 0;
+margin:0 auto;
+transform-origin: bottom center;
+border-radius:  100% 100% 5px 5px;
+transform:translateX(-50%) rotate(90deg);
+
+}
+.hand-hour{
+  width: 12px;
+  height:70px;
+  background-color: rgba(204, 141, 241, 0.884);
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+right: 0;
+margin:0 auto;
+border-radius:  100% 100% 5px 5px;
+transform-origin: bottom center;
+transform:translateX(-50%) rotate(120deg);
+
+}
+}
+.app-each{
+  &::before{
+    content: "";
+  }
+  &::after{
+    content: " ";
+  }
+
+  &:nth-child(1):before{
+    content: "";
+    }
+  
+}
+.github-url-title{
+  font-size: 27px;
+  margin-top: 100px;
+}
+.github-url{
+
+}
